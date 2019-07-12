@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Services.Services
 {
-    public class PersonService : IServiceDTO<PersonDTO>
+    public class PersonService : IServiceDTO<PersonDTO>, IServicePost<PersonDTOPost>
     {
         private readonly IRepository<Person> _repository;
         private readonly IMapper _mapper;
@@ -21,7 +21,11 @@ namespace Services.Services
 
         public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var model = _repository.Find(id);
+            if(model != null)
+            {
+                _repository.Remove(id);
+            }
         }
 
         public PersonDTO Get(Guid id)
@@ -40,6 +44,14 @@ namespace Services.Services
                 personDTOList.Add(_mapper.Map<PersonDTO>(person));
             }
             return personDTOList;
+        }
+
+        public void Save(PersonDTOPost model)
+        {
+            if (model != null)
+            {
+                _repository.Add(_mapper.Map<Person>(model));
+            }
         }
 
         public void Update(PersonDTO model)

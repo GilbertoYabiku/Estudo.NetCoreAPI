@@ -28,7 +28,19 @@ namespace App.WebAPI.Controllers
             _servicePost = servicePost;
             _service = service;
         }
-        
+
+        /// <summary>
+        /// Get a specific Person by its id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>A person</returns>
+        [HttpGet("{id}")]
+        public ActionResult<Person> GetById(Guid id)
+        {
+            var person = _service.Get(id);
+            return Ok(person);
+        }
+
         /// <summary>
         /// Gets all Persons
         /// </summary>
@@ -83,6 +95,30 @@ namespace App.WebAPI.Controllers
                 return ValidationProblem(new ValidationProblemDetails()
                 {
                     Type = "Model Validation Error",
+                    Detail = errors
+                });
+            }
+        }
+
+        /// <summary>
+        /// Deletes a specific Person
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>A requistion status code</returns>
+        [HttpDelete("{id}")]
+        public ActionResult Delete(Guid id)
+        {
+            try
+            {
+                _service.Delete(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                string errors = e.Message;
+                return ValidationProblem(new ValidationProblemDetails()
+                {
+                    Type = "Cannot delete",
                     Detail = errors
                 });
             }

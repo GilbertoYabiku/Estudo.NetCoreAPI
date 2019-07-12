@@ -35,7 +35,7 @@ namespace App.WebAPI
 
             services.AddScoped<IServiceDTO<PersonDTO>, PersonService>();
 
-            services.AddScoped<IServicePost<PersonDTOPost>, PersonServicePost>();
+            services.AddScoped<IServicePost<PersonDTOPost>, PersonService>();
 
             services.AddScoped<IMovieRepository, MovieRepository>();
 
@@ -48,8 +48,6 @@ namespace App.WebAPI
             services.AddDbContext<ConfigurationContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:DefaultConnection"]));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
