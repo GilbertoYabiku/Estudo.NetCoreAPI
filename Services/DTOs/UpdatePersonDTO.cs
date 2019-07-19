@@ -2,7 +2,7 @@
 
 namespace Services.DTOs
 {
-    public class PersonDTO : BaseDTO
+    public class UpdatePersonDTO
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

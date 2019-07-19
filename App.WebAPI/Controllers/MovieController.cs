@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Models;
 using Microsoft.AspNetCore.Mvc;
+using Services.DTOs;
 using Services.Services.Interfaces;
 
 namespace App.WebAPI.Controllers
@@ -29,7 +29,7 @@ namespace App.WebAPI.Controllers
         /// </summary>
         /// <returns>A list of movies</returns>
         [HttpGet]
-        public ActionResult<IEnumerable<Movie>> GetAll()
+        public ActionResult<IEnumerable<MovieDTO>> GetAll()
         {
             return Ok(_movieService.GetAll());
         }
@@ -40,7 +40,7 @@ namespace App.WebAPI.Controllers
         /// <param name="id"></param>
         /// <returns>A movie</returns>
         [HttpGet("{id}")]
-        public ActionResult<Movie> GetById(Guid id)
+        public ActionResult<MovieDTO> GetById(Guid id)
         {
             var movie = _movieService.Get(id);
             return Ok(movie);
@@ -49,14 +49,14 @@ namespace App.WebAPI.Controllers
         /// <summary>
         /// Creates a new Movie
         /// </summary>
-        /// <param name="movie"></param>
+        /// <param name="createMovieDTO"></param>
         /// <returns>A requistion status code</returns>
         [HttpPost]
-        public ActionResult Post([FromBody] Movie movie)
+        public ActionResult Post([FromBody] CreateMovieDTO createMovieDTO)
         {
             try
             {
-                _movieService.Save(movie);
+                _movieService.Save(createMovieDTO);
                 return Ok();
             }
             catch (Exception e)
@@ -73,14 +73,14 @@ namespace App.WebAPI.Controllers
         /// <summary>
         /// Updates a specific Movie
         /// </summary>
-        /// <param name="movie"></param>
+        /// <param name="updateMovieDTO"></param>
         /// <returns>A requistion status code</returns>
         [HttpPut]
-        public ActionResult Put([FromBody] Movie movie)
+        public ActionResult Put([FromBody] UpdateMovieDTO updateMovieDTO)
         {
             try
             {
-                _movieService.Update(movie);
+                _movieService.Update(updateMovieDTO);
                 return Ok();
             }
             catch (Exception e)
@@ -124,7 +124,7 @@ namespace App.WebAPI.Controllers
         /// <param name="year"></param>
         /// <returns>A list of Movies filtered by Release Year</returns>
         [HttpGet("year/{year}")]
-        public ActionResult<IEnumerable<Movie>> FindMovieByReleaseYear(int year)
+        public ActionResult<IEnumerable<MovieDTO>> FindMovieByReleaseYear(int year)
         {
             return Ok(_movieService.FindMovieByReleaseYear(year));
         }

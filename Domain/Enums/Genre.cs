@@ -1,4 +1,5 @@
-﻿namespace Core.Enums
+﻿
+namespace Domain.Enums
 {
     public enum Genre
     {

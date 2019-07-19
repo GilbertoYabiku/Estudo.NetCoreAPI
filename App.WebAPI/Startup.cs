@@ -1,15 +1,19 @@
 ﻿using AutoMapper;
-using Core.Models;
+using Core.CQRS;
+using Domain.Commands;
+using Domain.Handlers.Commands;
+using Domain.Interfaces;
+using Domain.Models;
+using Infrastructure.Bus;
 using Infrastructure.Configurations;
 using Infrastructure.Repositories;
-using Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Services.DTOs;
 using Services.Mappings;
 using Services.Services;
 using Services.Services.Interfaces;
@@ -33,13 +37,23 @@ namespace App.WebAPI
         {
             services.AddScoped<IMovieService, MovieService>();
 
-            services.AddScoped<IServiceDTO<PersonDTO>, PersonService>();
-
-            services.AddScoped<IServicePost<PersonDTOPost>, PersonService>();
+            services.AddScoped<IPersonService, PersonService>();
 
             services.AddScoped<IMovieRepository, MovieRepository>();
 
             services.AddScoped<IRepository<Person>, Repository<Person>> ();
+
+            services.AddScoped<IHandler<CreateMovieCommand>, MovieCommandHandler>();
+            services.AddScoped<IHandler<UpdateMovieCommand>, MovieCommandHandler>();
+            services.AddScoped<IHandler<RemoveMovieCommand>, MovieCommandHandler>();
+
+            services.AddScoped<IHandler<CreatePersonCommand>, PersonCommandHandler>();
+            services.AddScoped<IHandler<CreatePersonCommand>, PersonCommandHandler>();
+            services.AddScoped<IHandler<CreatePersonCommand>, PersonCommandHandler>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddScoped<IBus, InMemoryBus>();
 
             ConfigureAutomapper(services);
 

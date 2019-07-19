@@ -1,9 +1,8 @@
-﻿using Core.Enums;
-using System;
+﻿using Domain.Enums;
 
-namespace Core.Models
+namespace Services.DTOs
 {
-    public class Movie : BaseModel
+    public class CreateMovieDTO : BaseDTO
     {
         public string Name { get; set; }
         public string Description { get; set; }

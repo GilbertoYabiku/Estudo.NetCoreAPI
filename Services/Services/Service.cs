@@ -1,59 +1,70 @@
-﻿using Core.Models;
-using Infrastructure.Repositories.Interfaces;
+﻿using AutoMapper;
+using Core.Models;
+using Domain.Interfaces;
+using Services.DTOs;
 using Services.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 
 namespace Services.Services
 {
-    public class Service<T> : IService<T> where T : BaseModel
+    public class Service<TEntity> : IService<TEntity>
+        where TEntity : BaseModel
     {
-        private readonly IRepository<T> _repository;
+        private readonly IRepository<TEntity> _repository;
+        private readonly IMapper _mapper;
 
-        public Service(IRepository<T> repository)
+        public Service(IRepository<TEntity> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
         public void Delete(Guid id)
         {
             var model = _repository.Find(id);
-            if(model != null)
+            if (model != null)
             {
                 model.Deleted = true;
                 _repository.Update(model);
             }
         }
 
-        public T Get(Guid id)
+        public TDTO Get<TDTO>(Guid id) where TDTO : BaseDTO
         {
             var model = _repository.Find(id);
-            
+
             if (model != null)
             {
-                return model;
+                return _mapper.Map<TDTO>(model);
             }
             return null;
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<TDTO> GetAll<TDTO>() where TDTO : BaseDTO
         {
-            return _repository.Get();
-        }
-
-        public void Save(T model)
-        {
-            if(model != null)
+            IEnumerable<TEntity> entityList = _repository.Get();
+            List<TDTO> entityDTOList = new List<TDTO>();
+            foreach (TEntity entity in entityList)
             {
-                _repository.Add(model);
+                entityDTOList.Add(_mapper.Map<TDTO>(entity));
             }
+            return entityDTOList;
         }
 
-        public void Update(T model)
+        public void Save<TDTO>(TDTO model) where TDTO : BaseDTO
         {
             if (model != null)
             {
-                _repository.Update(model);
+                _repository.Add(_mapper.Map<TEntity>(model));
+            }
+        }
+
+        public void Update<TDTO>(TDTO model) where TDTO : BaseDTO
+        {
+            if (model != null)
+            {
+                _repository.Update(_mapper.Map<TEntity>(model));
             }
         }
     }

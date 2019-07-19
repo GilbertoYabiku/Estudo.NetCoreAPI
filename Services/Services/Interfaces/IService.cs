@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Services.DTOs;
+using System;
 using System.Collections.Generic;
 
 namespace Services.Services.Interfaces
 {
-    public interface IService<T>
+    public interface IService<TEntity>
     {
-        void Save(T model);
-        void Update(T model);
+        void Save<TDTO>(TDTO model) where TDTO : BaseDTO;
+        void Update<TDTO>(TDTO model) where TDTO : BaseDTO;
         void Delete(Guid id);
-        T Get(Guid id);
-        IEnumerable<T> GetAll();
+        TDTO Get<TDTO>(Guid id) where TDTO : BaseDTO;
+        IEnumerable<TDTO> GetAll<TDTO>() where TDTO : BaseDTO;
     }
 }

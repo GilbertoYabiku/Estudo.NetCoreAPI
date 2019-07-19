@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Core.Models
+namespace Services.DTOs
 {
-    public class Person : BaseModel
+    public class CreatePersonDTO : BaseDTO
     {
         public string Name { get; set; }
         public string LastName { get; set; }

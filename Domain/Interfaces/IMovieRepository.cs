@@ -1,7 +1,7 @@
-﻿using Core.Models;
+﻿using Domain.Models;
 using System.Collections.Generic;
 
-namespace Infrastructure.Repositories.Interfaces
+namespace Domain.Interfaces
 {
     public interface IMovieRepository : IRepository<Movie>
     {

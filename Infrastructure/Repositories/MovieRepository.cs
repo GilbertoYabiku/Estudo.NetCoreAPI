@@ -1,8 +1,8 @@
-﻿using Core.Models;
+﻿using Domain.Models;
 using Infrastructure.Configurations;
-using Infrastructure.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using Domain.Interfaces;
 
 namespace Infrastructure.Repositories
 {

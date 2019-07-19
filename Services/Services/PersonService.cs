@@ -1,65 +1,64 @@
-﻿using AutoMapper;
-using Core.Models;
-using Infrastructure.Repositories.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using AutoMapper;
+using Core.CQRS;
+using Domain.Commands;
+using Domain.Interfaces;
+using Domain.Models;
 using Services.DTOs;
 using Services.Services.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace Services.Services
 {
-    public class PersonService : IServiceDTO<PersonDTO>, IServicePost<PersonDTOPost>
+    public class PersonService : IPersonService
     {
         private readonly IRepository<Person> _repository;
         private readonly IMapper _mapper;
+        private readonly IBus _bus;
 
-        public PersonService(IRepository<Person> repository, IMapper mapper)
+        public PersonService(IRepository<Person> repository, IMapper mapper, IBus bus)
         {
             _repository = repository;
             _mapper = mapper;
+            _bus = bus;
         }
 
         public void Delete(Guid id)
         {
-            var model = _repository.Find(id);
-            if(model != null)
-            {
-                _repository.Remove(id);
-            }
+            _bus.SendCommand(new RemovePersonCommand(id));
         }
 
         public PersonDTO Get(Guid id)
         {
-            Person person = _repository.Find(id);
-            
-            return _mapper.Map<PersonDTO>(person);
+            var model = _repository.Find(id);
+            if (model != null)
+            {
+                return _mapper.Map<PersonDTO>(model);
+            }
+            return null;
         }
 
         public IEnumerable<PersonDTO> GetAll()
         {
-            IEnumerable<Person> personList = _repository.Get();
-            List<PersonDTO> personDTOList = new List<PersonDTO>();
-            foreach (Person person in personList)
+            IEnumerable<Person> entityList = _repository.Get();
+            List<PersonDTO> entityDTOList = new List<PersonDTO>();
+            foreach (Person entity in entityList)
             {
-                personDTOList.Add(_mapper.Map<PersonDTO>(person));
+                entityDTOList.Add(_mapper.Map<PersonDTO>(entity));
             }
-            return personDTOList;
+            return entityDTOList;
         }
 
-        public void Save(PersonDTOPost model)
+        public void Save(CreatePersonDTO model)
         {
-            if (model != null)
-            {
-                _repository.Add(_mapper.Map<Person>(model));
-            }
+            var person = _mapper.Map<CreateMovieCommand>(model);
+            _bus.SendCommand(person);
         }
 
-        public void Update(PersonDTO model)
+        public void Update(UpdatePersonDTO model)
         {
-            if (model != null)
-            {
-                _repository.Update(_mapper.Map<Person>(model));
-            }
+            var person = _mapper.Map<UpdateMovieCommand>(model);
+            _bus.SendCommand(person);
         }
     }
 }

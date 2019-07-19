@@ -15,17 +15,14 @@ namespace App.WebAPI.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly IServiceDTO<PersonDTO> _service;
-        private readonly IServicePost<PersonDTOPost> _servicePost;
+        private readonly IPersonService _service;
 
         /// <summary>
         /// PersonController Constructor
         /// </summary>
         /// <param name="service"></param>
-        /// /// <param name="servicePost"></param>
-        public PersonController(IServiceDTO<PersonDTO> service, IServicePost<PersonDTOPost> servicePost)
+        public PersonController(IPersonService service)
         {
-            _servicePost = servicePost;
             _service = service;
         }
 
@@ -35,7 +32,7 @@ namespace App.WebAPI.Controllers
         /// <param name="id"></param>
         /// <returns>A person</returns>
         [HttpGet("{id}")]
-        public ActionResult<Person> GetById(Guid id)
+        public ActionResult<PersonDTO> GetById(Guid id)
         {
             var person = _service.Get(id);
             return Ok(person);
@@ -55,14 +52,14 @@ namespace App.WebAPI.Controllers
         /// <summary>
         /// Creates a new Person
         /// </summary>
-        /// <param name="personDTO"></param>
+        /// <param name="createPersonDTO"></param>
         /// <returns>A requistion status code</returns>
         [HttpPost]
-        public ActionResult Post([FromBody] PersonDTOPost personDTO)
+        public ActionResult Post([FromBody] CreatePersonDTO createPersonDTO)
         {
             try
             {
-                _servicePost.Save(personDTO);
+                _service.Save(createPersonDTO);
                 return Ok();
             }
             catch (Exception e)
@@ -79,14 +76,14 @@ namespace App.WebAPI.Controllers
         /// <summary>
         /// Updates a specific Person
         /// </summary>
-        /// <param name="personDTO"></param>
+        /// <param name="updatePersonDTO"></param>
         /// <returns>A requistion status code</returns>
         [HttpPut]
-        public ActionResult Put([FromBody] PersonDTO personDTO)
+        public ActionResult Put([FromBody] UpdatePersonDTO updatePersonDTO)
         {
             try
             {
-                _service.Update(personDTO);
+                _service.Update(updatePersonDTO);
                 return Ok();
             }
             catch (Exception e)

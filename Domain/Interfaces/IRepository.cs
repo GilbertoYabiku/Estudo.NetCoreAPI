@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Infrastructure.Repositories.Interfaces
+namespace Domain.Interfaces
 {
     public interface IRepository<T> where T : BaseModel
     {
