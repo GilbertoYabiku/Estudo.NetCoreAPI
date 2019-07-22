@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using AutoMapper;
-using Core.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.DTOs;
 using Services.Services.Interfaces;
